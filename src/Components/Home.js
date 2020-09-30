@@ -1,41 +1,63 @@
-import React from 'react';
-import './Home.css'
-import SignUp from '../Components/SIgn-Up';
-import SignIn from '../Components/Sign-In';
+import React from 'react'
+import './Home.css';
+import {Link,Route,BrowserRouter as Router} from 'react-router-dom';
+import {BiUser} from 'react-icons/bi';
+import {ImBooks} from 'react-icons/im';
+import {BiBookAdd} from 'react-icons/bi';
+import {RiLogoutBoxRLine} from 'react-icons/ri';
+import Shelf from './Pages/Shelf/Shelf';
+import MyLibrary from './Pages/MyLibrary/MyLibrary';
+
 
 function Home() {
-
-        return (
-            <div className="home-container">
-                <div className='d-flex flex-column justify-content-start banner-text'>
-                    <div className='logo'>
-                        <img src='/asset/img/logo.svg' alt='logo'/>
+    return (
+        <Router>
+        <div className='container-fluid'>
+            <div className='row pages-container'>
+                <div className='col-3 pages-left'>
+                    <div className='logo-pages'>
+                    <img src='/asset/img/logo.svg' />
+                        {/* <Link to='/'></Link> */}
                         <h1>Lib'rary</h1>
                     </div>
-                    <div className="banner-text-heading">
-                        <h1>Your Library</h1>
-                        <h1>Anywhere</h1>
-                    </div>
-                    
-                    <div className="banner-text-paragraf">
-                        <p>
-                        Sign-up today and receive unlimited access to all of your reading - share your book.
-                        </p>
-                    </div>
-                    <div className='banner-button'>
-                        <div className='signUp-btn'>
-                            <SignUp />
+                    <div className='pages-profile'>
+                        <div className='pages__profile-img'>
+                            <img src='/asset/img/profile.png' alt='profile' />
                         </div>
-                        <div className='signIn-btn'>
-                            <SignIn/>
-                        </div>          
+                        <h1>Harttonz</h1>
                     </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <Link class='btn  list-flex-item-group'>
+                                <BiUser/><span>Profile</span>
+                            </Link>
+                        </li>
+                        <li class="list-group-item">
+                            <Link to='/mylibrary' class='btn  list-flex-item-group'>
+                                <ImBooks/><span>My Library</span>
+                            </Link>
+                        </li>
+                        <li class="list-group-item">
+                            <Link class='btn  list-flex-item-group'>
+                                <BiBookAdd/><span>Add Book</span>
+                            </Link>
+                        </li>
+                        <li class="list-group-item">
+                            <Link class='btn  list-flex-item-group'>
+                                <RiLogoutBoxRLine/><span>Logout</span>
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
-                <div className='banner-content'>
-                    <img src='/asset/img/bgHomed.png' className='banner-bg' alt='bg-banner'/>
+                <div className='col-9 pages-right'>
+                    <Route exact path='/'  component={Shelf}/>
+                    <Route path='/mylibrary'  component={MyLibrary}/>
                 </div>
-            </div>           
+            </div>    
+        </div>
+    </Router>
     )
 }
+
 
 export default Home
