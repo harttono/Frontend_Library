@@ -1,14 +1,17 @@
 import React from 'react';
 import {Switch,BrowserRouter as Router,Route} from 'react-router-dom';
+import LandingPage from './Components/LandingPage';
+import Dasboard from './Components/Home';
 import Home from './Components/Home';
-import Dasboard from './Components/Dashboard';
 
 
 function App() {
   return (
     <Router>
     <Switch>
-      <Route path='/' exact component={Home}/>
+      <Route exact path='/' component={LandingPage}/>
+      <Route path='/home' component={Home}/>
+      
     </Switch>
   </Router>
   );
