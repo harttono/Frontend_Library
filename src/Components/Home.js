@@ -7,6 +7,7 @@ import {BiBookAdd} from 'react-icons/bi';
 import {RiLogoutBoxRLine} from 'react-icons/ri';
 import Shelf from './Pages/Shelf/Shelf';
 import MyLibrary from './Pages/MyLibrary/MyLibrary';
+import AddBook from './AddBook';
 
 
 function Home() {
@@ -17,8 +18,9 @@ function Home() {
                 <div className='col-3 pages-left'>
                     <div className='logo-pages'>
                     <img src='/asset/img/logo.svg' />
-                        {/* <Link to='/'></Link> */}
-                        <h1>Lib'rary</h1>
+                        <Link to='/home'>
+                            <h1>Lib'rary</h1>
+                        </Link>
                     </div>
                     <div className='pages-profile'>
                         <div className='pages__profile-img'>
@@ -38,20 +40,21 @@ function Home() {
                             </Link>
                         </li>
                         <li class="list-group-item">
-                            <Link class='btn  list-flex-item-group'>
+                            <Link to='/add-book' class='btn  list-flex-item-group'>
                                 <BiBookAdd/><span>Add Book</span>
                             </Link>
                         </li>
                         <li class="list-group-item">
-                            <Link class='btn  list-flex-item-group'>
+                            <Link to='/' class='btn  list-flex-item-group'>
                                 <RiLogoutBoxRLine/><span>Logout</span>
                             </Link>
                         </li>
                     </ul>
                 </div>
                 <div className='col-9 pages-right'>
-                    <Route exact path='/'  component={Shelf}/>
+                    <Route exact path='/home'  component={Shelf}/>
                     <Route path='/mylibrary'  component={MyLibrary}/>
+                    <Route path='/add-book'  component={AddBook}/>
                 </div>
             </div>    
         </div>
