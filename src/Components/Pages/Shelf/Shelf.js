@@ -1,7 +1,8 @@
 import React from 'react';
-import MyLibrary from '../MyLibrary/MyLibrary';
 import {Link} from 'react-router-dom';
 import {IoIosArrowBack} from 'react-icons/io';
+import {Book1,Book2,Book3,Book4} from '../MyLibrary/Data';
+import Book from '../../Book';
 
 function Shelf() {
     return (
@@ -22,8 +23,12 @@ function Shelf() {
                         <IoIosArrowBack/> Category
                     </Link>       
                 </div>
-                <MyLibrary/>
-            
+                <div className="row pages-books">
+                    <Book {...Book1}/>
+                    <Book {...Book2}/>
+                    <Book {...Book3}/>
+                    <Book {...Book4}/>  
+                </div>     
         </>
     )
 }

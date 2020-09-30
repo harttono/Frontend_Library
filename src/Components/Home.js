@@ -8,6 +8,7 @@ import {RiLogoutBoxRLine} from 'react-icons/ri';
 import Shelf from './Pages/Shelf/Shelf';
 import MyLibrary from './Pages/MyLibrary/MyLibrary';
 import AddBook from './AddBook';
+import Profile from './Profile';
 
 
 function Home() {
@@ -30,7 +31,7 @@ function Home() {
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item">
-                            <Link class='btn  list-flex-item-group'>
+                            <Link to='/profile' class='btn  list-flex-item-group'>
                                 <BiUser/><span>Profile</span>
                             </Link>
                         </li>
@@ -39,7 +40,7 @@ function Home() {
                                 <ImBooks/><span>My Library</span>
                             </Link>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item spliter">
                             <Link to='/add-book' class='btn  list-flex-item-group'>
                                 <BiBookAdd/><span>Add Book</span>
                             </Link>
@@ -53,8 +54,9 @@ function Home() {
                 </div>
                 <div className='col-9 pages-right'>
                     <Route exact path='/home'  component={Shelf}/>
-                    <Route path='/mylibrary'  component={MyLibrary}/>
-                    <Route path='/add-book'  component={AddBook}/>
+                    <Route path='/mylibrary'   component={MyLibrary}/>
+                    <Route path='/add-book'    component={AddBook}/>
+                    <Route path='/profile'     component={Profile}/>
                 </div>
             </div>    
         </div>

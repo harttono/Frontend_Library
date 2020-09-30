@@ -1,25 +1,18 @@
 import React from 'react';
-import Books from './Data';
+import {Book1,Book2,Book3,Book4} from './Data';
+import Book from '../../Book';
 
 function MyLibrary() {
     return (
-        <>
-           <h1>My Library</h1>
-            <div className='row pages-books'>
-            { Books.listBooks.length > 0 ? Books.listBooks.map( book => (
-                            <div class="card" key={book.id}>
-                            <img src={book.img} class="card-img-top" alt="books"/>
-                            <div class="card-body">
-                            <h5 class="card-title">{book.title}</h5>
-                            <p class="card-text">{book.writer}</p>
-                            </div>
-                        </div>
-
-                        )) : 
-                        <div>No Books</div>
-            }
-            </div>
-        </>
+         <div className="pageBook__Section">
+             <h1>My Library</h1>
+             <div className='row pages-books'>
+                <Book {...Book1}/>
+                <Book {...Book2}/>
+                <Book {...Book3}/>
+                <Book {...Book4}/>
+            </div> 
+         </div>
     )
 }
 

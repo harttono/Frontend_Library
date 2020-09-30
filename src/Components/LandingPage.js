@@ -32,7 +32,7 @@ function LandingPage() {
                     </div>
                 </div>
                 <div className='banner-content'>
-                    <img src='/asset/img/bgHomed.png' className='banner-bg' alt='bg-banner'/>
+                    <img src='/asset/img/bgHome.png' className='banner-bg' alt='bg-banner'/>
                 </div>
             </div>           
     )
