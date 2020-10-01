@@ -4,9 +4,9 @@
 .pages-container{
     padding:2rem 2rem 1rem 0 ;
 }
-
 /* Pages Left */
 .pages-left{
+    padding:1rem 0;
     flex-direction:column;
     align-items:center;
     position:fixed !important;
@@ -14,14 +14,17 @@
     left:0;
     height:100vh;
 }
+/* Logo Styling */
 .logo-pages{
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-top:1rem;
 }
 .logo-pages img {
-    margin:0 .5rem;
+    margin-right:.5rem;
+}
+.logo-pages > a:hover{
+    text-decoration:none;
 }
 .logo-pages h1{
     margin-bottom:0 !important;
@@ -32,7 +35,7 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:2rem 0 1rem;
+    padding:2rem 0 2rem;
     border-bottom:.1rem solid #dedede;
 }
 .pages__profile-img{
@@ -259,6 +262,7 @@
 }
 .detail-book-readbtn:hover{
     opacity:.8;
+    text-decoration:none;
 }
 .detail-book-readbtn span{
     margin-right:.4rem;
@@ -274,16 +278,26 @@
     align-items:center;
     background:#FDEDE6;
     padding:1rem;
-    height:21rem;
+    height:23rem;
 }
 
 .list-group .flex-profile-info{
     display:flex;
     align-items:center;
 }
+.flex-profile-info .profile__icon_info span{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+}
 .profile__page_info .list-group-item{
-    padding:.8rem 1.2rem !important;
+    padding:1.1rem 1.2rem !important;
+    /* border:0 !important; */
+    background:transparent !important;
 
+}
+.profile__page_info .list-group-item h5{
+    margin-bottom:0 !important;
 }
 .profile__icon_info {
     font-size:2rem;

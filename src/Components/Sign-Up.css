@@ -19,3 +19,6 @@
 .modal-signUp-notify{
     text-align:center;
 }
+.modal-signUp-notify a{
+    text-decoration:none;
+}

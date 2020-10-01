@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import {Modal,Button,Form} from 'react-bootstrap';
-import './Sign-Up.css';
+import './Sign-In.css';
 import {Link} from 'react-router-dom';
 function SignIn(props) {
     const [show, setShow] = useState(false);
@@ -29,7 +29,7 @@ function SignIn(props) {
                     <Form.Control type="password" placeholder="Password" />
                 </Form.Group>
                 <Form.Group>
-                    <Button variant="danger" className='btn-modal-signUp' onClick ={ handleLogin}>Sign In</Button>
+                    <Link to="/home"className="btn btn-danger w-100">Sign In</Link>
                 </Form.Group>
                 <Form.Group>
                     <p className='modal-signUp-notify'>

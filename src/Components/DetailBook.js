@@ -1,7 +1,7 @@
 import React from 'react';
 import {BiBookmark} from 'react-icons/bi';
 import {IoIosArrowForward} from 'react-icons/io';
-
+import {Link} from 'react-router-dom';
 function DetailBook() {
     return (
         <div className="detailBook">
@@ -48,9 +48,9 @@ function DetailBook() {
                 <button class='detail-book-addbtn mx-2'>
                     <span>Add Library</span><BiBookmark/>
                 </button>
-                <button class='detail-book-readbtn mx-2'>
+                <Link to='/reader' class='detail-book-readbtn mx-2'>
                     <span>Read Book</span><IoIosArrowForward/>
-                </button>
+                </Link>
             </div>
         </div>
     )

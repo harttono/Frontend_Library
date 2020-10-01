@@ -11,7 +11,7 @@ function Profile() {
                 <ul class="list-group profile__page_info">
                     <li class="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
-                            <MdLocalPostOffice/>
+                            <span><MdLocalPostOffice/></span>
                         </div>
                         <div>
                             <h5>Harttonz@gmail.com</h5>
@@ -20,7 +20,7 @@ function Profile() {
                     </li>
                     <li class="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
-                            <FaTransgender/>
+                            <span><FaTransgender/></span>
                         </div>
                         <div>
                             <h5>Male</h5>
@@ -29,7 +29,7 @@ function Profile() {
                     </li>
                     <li class="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
-                                <FaPhoneAlt/>
+                            <span><FaPhoneAlt/></span>
                         </div>
                         <div>
                             <h5>08988678832</h5>
@@ -38,7 +38,7 @@ function Profile() {
                     </li>
                     <li class="list-group-item flex-profile-info">
                          <div className="profile__icon_info">
-                            <FaMapMarkerAlt/>
+                            <span><FaMapMarkerAlt/></span>
                         </div>
                         <div>
                             <h5>Perumahan Permata Bintaro Residence C-3</h5>
