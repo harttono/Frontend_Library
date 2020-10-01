@@ -33,7 +33,7 @@
     align-items:center;
     justify-content:center;
     padding:2rem 0 1rem;
-    border-bottom:.2rem solid #dedede;
+    border-bottom:.1rem solid #dedede;
 }
 .pages__profile-img{
     max-width:120px;
@@ -81,7 +81,7 @@
 }
 
 .pages-container .spliter{
-    border-bottom:.2rem solid #dedede !important;
+    border-bottom:.1rem solid #dedede !important;
 }
 
 
@@ -139,6 +139,9 @@
     margin:.5rem;
     width:13rem;
 }
+.pages-books .card a{
+    text-decoration:none;
+}
 
 /* AddBook Component */
 .add-book__page{
@@ -184,10 +187,6 @@
     justify-content:flex-end;
     align-items:center;
 }
-.add-book__page-btn .btn-danger{
-    background:#EE4622 !important;
-}
-
 .add-book-btn{
     padding:.2rem 1rem;
     background:#EE4622;
@@ -202,6 +201,70 @@
 .add-book-btn span{
     margin-right:.4rem;
 }
+
+/* Detail Book */
+.detailBook{
+    padding:1rem;
+    padding-bottom:20rem !important;
+}
+.detail__book-section{
+    padding:1rem 0 1.6rem;
+    margin-bottom:2rem !important;
+    border-bottom:.1rem solid #dedede;
+}
+.detail__book-section img{
+    height:28rem;
+}
+.detail__info-book .list-group-item{
+    padding:.7rem 1.25rem  !important;
+    border:0 !important;
+}
+.detail__info-book li h1{
+    font-weight:900 !important;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular';
+}
+.detail__info-book .list-group-item h3{
+    font-size:1.6rem !important;
+}
+.detail__info-book li:last-child h3{
+    color:#EE4622;
+}
+.desc__info-book{
+    padding:1.5rem 0;
+}
+.desc__info-book p{
+    margin:1rem 0 !important;
+}
+.detail-book-addbtn{
+    padding:.5rem 1rem;
+    background:#EE4622;
+    color:#ffffff;
+    font-size:1.5rem;
+    border-color:rgb(238, 70, 34);
+    border-radius:.4rem;
+}
+.detail-book-addbtn:hover{
+    opacity:.8;
+}
+.detail-book-addbtn span{
+    margin-right:.4rem;
+}
+.detail-book-readbtn{
+    padding:.5rem 1rem;
+    background:#f8f9fa;
+    color:#121212;
+    font-size:1.5rem;
+    border-color:#dedede;
+    border-radius:.4rem;
+}
+.detail-book-readbtn:hover{
+    opacity:.8;
+}
+.detail-book-readbtn span{
+    margin-right:.4rem;
+}
+
+
 
 /* Profile Style */
 
@@ -227,7 +290,7 @@
     margin-right:.8rem;
    
 }
-.list-group .flex-profile-info h5,p{
+.profile__page_info .list-group .flex-profile-info h5,p{
     margin:0 !important;
 }
 

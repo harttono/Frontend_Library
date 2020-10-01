@@ -9,6 +9,7 @@ import Shelf from './Pages/Shelf/Shelf';
 import MyLibrary from './Pages/MyLibrary/MyLibrary';
 import AddBook from './AddBook';
 import Profile from './Profile';
+import DetailBook from './DetailBook';
 
 
 function Home() {
@@ -57,6 +58,7 @@ function Home() {
                     <Route path='/mylibrary'   component={MyLibrary}/>
                     <Route path='/add-book'    component={AddBook}/>
                     <Route path='/profile'     component={Profile}/>
+                    <Route path='/detail-book'     component={DetailBook}/>                  
                 </div>
             </div>    
         </div>
