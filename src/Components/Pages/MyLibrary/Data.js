@@ -20,5 +20,5 @@ export const Book3 = {
 export const Book4 = {
     img:'/asset/books/book4.png',
     title:'Tess on the road ',
-    writer:'Rachel Hartman'
+    writer:'Rachel Hartman',
 }
