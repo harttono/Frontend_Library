@@ -59,9 +59,9 @@ function DetailBook(props) {
 
     useEffect(() => {
         const listDetailProduct = async () =>{
-                dispatch({
-                    type:DETAIL_PRODUCT_REQUEST
-                })
+                    dispatch({
+                        type:DETAIL_PRODUCT_REQUEST
+                    })
             try{
                 const {data:{data}} = await API.get(`/book/${id}`,{
                     headers:{
@@ -75,7 +75,6 @@ function DetailBook(props) {
                     setDetailData(data);
                     setCategoryId(data.categoryId.id);
             }catch(error){
-                console.log('isi error')
                     dispatch({
                         type:DETAIL_PRODUCT_FAIL,
                         payload:error.response.data.message
@@ -85,8 +84,7 @@ function DetailBook(props) {
         }
       
        listDetailProduct();
-      
-      
+       
     }, [])
 
     return (
@@ -133,7 +131,7 @@ function DetailBook(props) {
                             <button class='detail-book-addbtn mx-2' disabled={book.status !== "approved"} onClick={openBookmarkModal}>
                             <span>Add to library</span><BiBookmark/>
                             </button>:
-                            <button class='detail-book-addbtn mx-2' disabled={book.status !== "approved"} onClick={openDeletedModal}>
+                            <button class='detail-book-addbtn mx-2'  onClick={openDeletedModal}>
                                 <span>Delete </span><MdDeleteForever/>
                             </button>
                         }

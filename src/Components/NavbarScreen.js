@@ -23,8 +23,8 @@ function Navbar() {
             <div className="container">
                 <Link to="/admin"><Brand/></Link>
                 <div className="dropdown-container">
-                <Link className="dropdown-item" to="/profile"> {userInfo && <img src={userInfo.picture}></img>}</Link>
-                <DropdownButton id="dropdown-basic-button" >
+                <Link className="dropdown-item"> {userInfo && <img src={userInfo.picture}></img>}</Link>
+                <DropdownButton title="drop" >
                     <Link className="dropdown-item" to="/addbook"><MdLibraryAdd/>add book</Link>
                     <Link className="dropdown-item" to="/category"><BsListUl/> List Category</Link>
                     <Link className="dropdown-item" to="#" onClick={handleLogout}><RiLogoutBoxRLine/> Logout</Link>
