@@ -142,6 +142,9 @@
 }
 
 /* Book Component */
+.pageBook__admin{
+    padding-top:5rem;
+}
 .pageBook__Section{
     padding:1.8rem 0 0;
 }
@@ -492,21 +495,44 @@
 
 /* list transaction */
 .admin-section{
-    padding-top:7rem;
+    padding-top:6rem;
+    font-size:.8rem;
 }
 
-.admin-section tbody{
+.admin-section table {
+    width:100%;
+}
+.admin-section table > thead{
+    color:#ffffff;
+}
+.admin-section table > tbody{
     background-color:#f8eeee;
 }
-.admin-section thead > tr > th:last-child{
+.admin-section table > thead > tr > th:last-child{
     text-align:center;
 }
-.admin-section tbody > tr > td:last-child{
+.admin-section table > tbody > tr > td:last-child{
     text-align:center;
 }
+.admin-section table > tbody > tr > td:nth-child(4){
+   text-align:center;
+}
+
+
 /* category  */
 .category-page{
     padding-top:7rem;
+}
+.category-page .addCategory{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.category-page > table > thead > tr > th:last-child{
+    text-align:right;
+}
+.category-page > table > tbody > tr > td:last-child{
+    text-align:right;
 }
 .category-page tbody{
     background-color:#f8eeee;

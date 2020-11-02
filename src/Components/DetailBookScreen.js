@@ -19,7 +19,7 @@ function DetailBook(props) {
     const [message,setMessage] = useState('');
     const {state:authData} = useAuth();
     const {userInfo} = authData;
-    const [detailData,setDetailData] = useState('');
+    const [detailData,setDetailData] = useState({});
     const [categoryId,setCategoryId] = useState('');
     const [state,dispatch] = useContext(ProductContext);
     const {isLoading,error,detailProduct,newBook:messageInfo}  = state;
@@ -41,6 +41,8 @@ function DetailBook(props) {
     const handleReader = () =>{
         props.history.push(`/read/${id}`);
     }
+
+    console.log('ini isi',detailData)
 
     const BookData = {
         title:detailData.title,
@@ -72,12 +74,15 @@ function DetailBook(props) {
                         type:DETAIL_PRODUCT_SUCCESS,
                         payload:data
                     })
-                    setDetailData(data);
-                    setCategoryId(data.categoryId.id);
+
+                    if(data){
+                        setDetailData(data);
+                        setCategoryId(data.categoryId.id);
+                    }
             }catch(error){
                     dispatch({
                         type:DETAIL_PRODUCT_FAIL,
-                        payload:error.response.data.message
+                        payload:error.message
                     })
                 
             }

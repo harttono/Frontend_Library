@@ -1,16 +1,14 @@
-import React,{useContext,useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import UploadServices from './services/FileUploadService';
 import {Modal} from 'react-bootstrap';
 
 
 
 const FileUploads = (props) => {
-    console.log('isi',props);
     const [selectedFiles,setSelectedFiles] = useState(undefined);
     const [currentFile,setCurrentFile] = useState(undefined);
     const [progress,setProgress] = useState(0);
     const [message,setMessage] = useState("");
-    const [urlFiles,setUrlFiles] = useState([]);
 
     const selectFile = (e) =>{
         setSelectedFiles(e.target.files);  
@@ -27,7 +25,6 @@ const FileUploads = (props) => {
             .then(response =>{
                 const urlData = response.data;
                 setMessage(response.data.message);
-                setUrlFiles([...urlFiles,urlData]);
             })
             .catch( () =>{
                 setProgress(0);
@@ -38,16 +35,7 @@ const FileUploads = (props) => {
         setSelectedFiles(undefined);
     }
      
-    useEffect(() => {
-        if(urlFiles.length > 0){
-            localStorage.setItem('url',JSON.stringify(urlFiles))
-        }
-        
 
-        return () => {
-           
-        }
-    }, [urlFiles])
     return (
             <Modal show={props.show} onHide={props.closeModal}>
                 <Modal.Header closeButton>
@@ -76,32 +64,16 @@ const FileUploads = (props) => {
                                 </div>
                             )}
                         </div>
-                        <div className="custom-file">
-                                <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" onChange={selectFile}/>
-                                <label className="custom-file-label" htmlfor="inputGroupFile01">Choose file</label>
-                        </div>
+                        <input type="file"  onChange={selectFile}/>
+                        
 
-
-                        <button className="btn btn-success w-100 my-1" disabled={!selectedFiles || urlFiles === 2} onClick={upload}>
+                        <button className="btn btn-success w-100 my-1" disabled={!selectedFiles} onClick={upload}>
                             Upload
                         </button>
                         
                         <div className="alert text-success text-center" role="alert">
                             {message}
-                        </div>
-                       
-                       {urlFiles.length === 1 && <div className="card my-2">
-                            <div className="card-header">List of files</div>
-                            <ul className="list-group list-group-flush">
-                                {urlFiles&& 
-                                    urlFiles.map( (file,index) =>(
-                                        <li className="list-group-item" key={index}>
-                                            <a href={file.url}>{file.filename}</a>
-                                        </li>
-                                    )) 
-                                }
-                            </ul>
-                        </div>}      
+                        </div>   
                 </Modal.Body>
             </Modal>
        

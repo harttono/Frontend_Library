@@ -93,7 +93,8 @@ function SignUp(props) {
                         <textarea className="textarea-control" name="address" rows="2"  placeholder="Address" value={address} onChange={(e) => handleChange(e)} />
                     </Form.Group>
                     <Form.Group>
-                        <button className='btn-modal-signUp btn btn-danger outline-0 w-100' onClick={ e => handleSubmit(e)}>Sign Up</button>
+                        <button className='btn-modal-signUp btn btn-danger outline-0 w-100' onClick={ e => handleSubmit(e)}>{isLoading ? <Spinner as="span" animation="grow" size="sm" role="status"aria-hidden="true"/> : null}
+                          <span className="mx-2">{' '}</span>Sign Up</button>
                     </Form.Group>
                     <Form.Group>
                         <div className='exclamation-text'>

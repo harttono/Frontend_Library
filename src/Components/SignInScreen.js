@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {Modal,Button,Form,Spinner} from 'react-bootstrap';
 import {useAuth} from './Provider/authProvider';
 import {USER_SIGNIN_REQUEST,USER_SIGNIN_FAIL, USER_SIGNIN_SUCCESS} from './Provider/constants/Constant';
+// import API from '../http-common';
 import Axios from 'axios';
 
 
@@ -25,7 +26,7 @@ function SignIn(props) {
           type:USER_SIGNIN_REQUEST
         })
       try{
-          const {data:{data}} = await Axios.post('api/v1/login',{email,password});
+          const {data:{data}} = await API.post('/login',{email,password});
         dispatch({
           type:USER_SIGNIN_SUCCESS,
           payload:data
@@ -33,7 +34,7 @@ function SignIn(props) {
       }catch(error){
         dispatch({
           type:USER_SIGNIN_FAIL,
-          payload:error.response.data.message
+          payload:error.message
         })
       }
     }
@@ -73,13 +74,14 @@ function SignIn(props) {
                           <Form.Control type="password" placeholder="Password" autoComplete="true" name="password" value={password} onChange={e => handleChange(e)}/>
                       </Form.Group>
                       <Form.Group>
-                          <button className="btn btn-danger outline-0 w-100" onClick={ (e) => handleSubmit(e)}>Sign In</button>
+                          <button className="btn btn-danger outline-0 w-100" onClick={ (e) => handleSubmit(e)}>
+                          {isLoading ? <Spinner as="span" animation="grow" size="sm" role="status"aria-hidden="true"/> : null}
+                          <span className="mx-2">{' '}</span>Sign In</button>
                       </Form.Group>
                       <Form.Group>
                           <div className='exclamation-text'>
                               Dont't have an account ? 
                               <button onClick={props.openSignInModal}>
-                                {/* {isLoading &&<div className="flash_info"><Spinner animation='border' variant='success'/></div>}  */}
                                   Click Here
                               </button>    
                           </div>

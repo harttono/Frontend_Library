@@ -19,11 +19,11 @@ function AddBook(props) {
     const [showMessage,setShowMessage] = useState(false);
     const [categoryId,setCategoryId] = useState(1);
     const [able,disable] = useState (false);
-
     const [state,dispatch] = useContext(ProductContext);
     const {isLoading,error,listCategory,newBook:message}  = state;
-    const [urlCover,setUrlCover] = useState('');
-    const [urlFile,setUrlFile] = useState('');
+    const [urlFiles,setUrlFiles] = useState([]);
+    const [status,setStatus] = useState('');
+
     const [formData,setFormData] = useState({
         title:'',
         author:'',
@@ -47,26 +47,21 @@ function AddBook(props) {
         props.history.push('/profile')
     }
 
-    let urls = JSON.parse(localStorage.getItem('url')) || [];
 
-    const _onFocus = (e) =>{
-        e.currentTarget.type='date';
+    const BookData = {
+        title:formData.title,
+        author:formData.author,
+        publication:parseInt(formData.publication),
+        category:{
+            id:categoryId
+        },
+        pages:parseInt(formData.pages),
+        ISBN:parseInt(formData.ISBN),
+        cover:urlFiles[0],
+        attachment:urlFiles[1],
+        status:status,
+        description:formData.description
     }
-
-   const BookData = {
-       title:formData.title,
-       author:formData.author,
-       publication:formData.publication,
-       category:{
-           id:categoryId
-       },
-       pages:formData.pages,
-       ISBN:formData.ISBN,
-       file:urlFile,
-       cover:urlCover,
-       status:'waiting to be verificated',
-       description:formData.description
-   }
    
     const onSaved = async (e) =>{
         e.preventDefault();
@@ -93,12 +88,11 @@ function AddBook(props) {
         setShowMessage(true);
     }
 
-    if(urls.length > 0){
-        setUrlCover(urls[0].url);
-        setUrlFile(urls[1].url);
-        localStorage.removeItem('url');
+    // get urls
+    const getUrls = (urls) =>{
+        setUrlFiles([...urlFiles,urls])
     }
- 
+   
 
     useEffect(() => {
     const getListCategory= async () =>{
@@ -126,15 +120,21 @@ function AddBook(props) {
     }
    getListCategory();
 
+   if(userInfo){
+        if (userInfo.isAdmin){
+            setStatus('approved')
+        }else{
+            setStatus('waiting to be verificated')
+        }           
+    }
    return () =>{
 
    }
    },[])
 
     return (
-        <div className='add-book__page'>
+        <div className={userInfo && userInfo.isAdmin ? 'container pageBook__admin' : 'add-book__page'}>
             <h1>Add Book</h1>
-         
             <form>
                 <div className="form-group">
                     <input type="text" name="title" autoComplete="off" className="form-control bg-light" placeholder="Title" onChange={ (e) => handleChange(e)}/>
@@ -143,15 +143,15 @@ function AddBook(props) {
                     <input type="text" name="author" autoComplete="off" className="form-control bg-light" placeholder="Author" onChange={ (e) => handleChange(e)}/>
                 </div>
                 <div className="form-group">
-                    <input type="text" name="publication" onFocus={ _onFocus}  autoComplete="off" className="form-control bg-light" placeholder="Publication Date"  onChange={ (e) => handleChange(e)}/>
+                    <input type="text" name="publication"   autoComplete="off" className="form-control bg-light" placeholder="Publication Date"  onChange={ (e) => handleChange(e)}/>
                 </div>
                 <div className="form-group">
-                    <select className=" w-100 bg-light p-2 select-category"  onChange={ (e) => setCategoryId(e.target.value)}>
-                        <option value='choose'>Choose a category book</option>
-                        {isLoading ? <div>loading..</div> : error ? <div>{error}</div> : listCategory ? listCategory.map( category => 
-                            <option value={category.id} key={category.id} >{category.name}</option>
-                        ) : null}
-                    </select>
+                        <select className=" w-100  p-2 select-category"  onChange={ (e) => setCategoryId(e.target.value)}>
+                            <option value='choose'>Choose a category book</option>
+                            {!error && listCategory ? listCategory.map( category => 
+                                <option value={category.id} key={category.id} >{category.name}</option>
+                            ) : null}
+                        </select>
                 </div>
                 <div className="form-group">
                     <input type="number" name="pages" className="form-control bg-light" placeholder="Pages" onChange={ (e) => handleChange(e)}/>
@@ -170,7 +170,7 @@ function AddBook(props) {
                 </div>
             </form>
             <div className="add-book__page-btn">
-                <button class='add-book-btn' onClick={(e) => onSaved(e)} disabled={urlCover == null}>
+                <button class='add-book-btn' onClick={(e) => onSaved(e)} disabled={urlFiles == 0}>
                     <span>Add Book</span><BiBookAdd/>
                 </button>
                 <Message show={showMessage} hide = {closeModal} data={message}/>

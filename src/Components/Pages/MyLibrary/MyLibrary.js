@@ -33,7 +33,6 @@ function MyLibrary() {
                         payload:data
                     })
             }catch(error){
-                console.log('isi error')
                     dispatch({
                         type:LIST_MYPRODUCTS_FAIL,
                         payload:error.response.data.message
@@ -48,7 +47,7 @@ function MyLibrary() {
     },[])
 
     return (
-         <div className="pageBook__Section">
+         <div className={userInfo && userInfo.isAdmin ? "container pageBook__admin" : "pageBook__Section"}>
              <h1>My Library</h1>
           
              <div className={myLibrary && myLibrary.length > 4 ? 'pages-books':  'pages-books justify-content-start'}>
