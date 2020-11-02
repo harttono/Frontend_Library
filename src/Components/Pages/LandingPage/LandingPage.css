@@ -1,0 +1,159 @@
+
+.LandingPage-container{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    position: relative;
+}
+
+/* Banner Text */
+
+.banner-text{
+    align-items:flex-start;
+    padding-left:5rem;
+}
+
+
+.brand-wrapper{
+    display:flex;
+    margin-top:10%;
+    margin-bottom:25%;
+}
+
+.banner-text-heading{
+    font-family:'Times New Roman', Times, serif;
+}
+.banner-text-heading h1{
+    font-weight:700 !important;
+    font-size:5.2rem;
+}
+.banner-text-heading h1:nth-child(1){
+    font-style:italic;
+}
+
+.banner-text-paragraf{
+    margin-top:2%;
+    margin-bottom:8%;
+    max-width:450px;
+    padding-right:2rem;
+}
+.banner-text-paragraf p{
+    margin-bottom:0 !important;
+    font-size:1.5rem !important;
+}
+
+
+.banner-button{
+    width:100%;
+    display:flex;
+}
+
+.banner-button  .signUp-btn{
+    flex:1;
+}
+.banner-button  .signIn-btn{
+    flex:1;
+    margin:0 0.8rem !important;
+}
+.banner-button  .btn{
+    width:100%;
+}
+.banner-button .signIn-btn .btn{
+    border:.1rem solid rgba(0,0,0,.4) !important;
+}   
+
+
+/* Banner Content */
+
+.banner-content{
+    height:100vh;
+    position:relative;
+}
+.banner-bg{
+    position: absolute;
+    right:0;
+    top:0;
+    height:100%;
+    object-fit:contain;
+}
+
+/* Sign In */
+.form-group .modal-signUp-notify a {
+    text-decoration:none;
+ }
+
+/* Sign Up */
+.modal-header{
+    padding:.2rem 1rem;
+}
+.modal-title.h4{
+    font-size:2rem !important;
+    font-weight:bolder;
+}
+.form-section .modal-header{
+    padding:.5rem 1rem !important;
+}
+   
+.form-section .modal-body{
+    padding:1.5rem 1rem 1rem !important;
+ }
+.form-section .form-control{
+    padding:1.2rem .3rem !important;
+    border:.2rem solid #dedede !important;
+    outline:none !important;
+}
+.form-content .form-group{
+    margin-bottom:.6rem;
+}
+.form-content .select-control{
+    display: block;
+    width: 100%;
+    padding:.2rem .1rem;
+    border:.2rem solid #dedede;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #495057;
+    background-color: #fff;
+    outline:none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.form-content .textarea-control{
+    width: 100%;
+    padding:.2rem .4rem;
+    border:.2rem solid #dedede;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #495057;
+    background-color: #fff;
+    outline:none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-modal-signUp{
+    width:100%;
+    padding:.4rem 1rem !important;
+}
+.exclamation-text {
+    text-align:center;
+}
+.exclamation-text button{
+    border:none;
+    outline:none;
+    background:transparent;
+    color:#00ff;
+    text-align:center;
+}
+
+/* flash info */
+.flash_info{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:.5rem;
+    color:#ff0000;
+}
+.flash_info_size{
+    font-size:1.4rem;
+}
