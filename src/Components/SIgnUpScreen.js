@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {Modal,Button,Form,Spinner} from 'react-bootstrap';
 import {useAuth} from './Provider/authProvider';
 import {USER_REGISTER_REQUEST,USER_REGISTER_SUCCESS,USER_REGISTER_FAIL} from './Provider/constants/Constant';
-import Http from '../http-common';
+import Axios from 'axios';
 function SignUp(props) {
     const {state,dispatch} = useAuth();
     const [info,setInfo] = useState('');
@@ -29,7 +29,7 @@ function SignUp(props) {
         type:USER_REGISTER_REQUEST,
       })
       try{
-        const {data:{data}} = await Http.post('/register',{...formData});
+        const {data:{data}} = await Axios.post('/api/v1/register',{...formData});
         dispatch({
           type:USER_REGISTER_SUCCESS,
           payload:data

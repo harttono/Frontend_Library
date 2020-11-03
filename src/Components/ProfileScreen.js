@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import {MdLocalPostOffice} from 'react-icons/md';
 import {FaTransgender,FaPhoneAlt,FaMapMarkerAlt} from 'react-icons/fa';
 import CartScreen from './CartScreen';
@@ -6,7 +6,7 @@ import {Spinner} from 'react-bootstrap';
 import Fileuploader from './FileUploadScreen';
 import {useAuth} from './Provider/authProvider';
 import { UPDATE_USER_FAIL, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from './Provider/constants/Constant';
-import API from '../http-common';
+import Axios from 'axios';
 
 function Profile() {
     const {state:authData,dispatch} = useAuth();
@@ -26,7 +26,7 @@ function Profile() {
                 type:UPDATE_USER_REQUEST
             })
         try{    
-        const {data:{picture}} = await API.patch(`/user/${userId}`,updateData,{
+        const {data:{picture}} = await Axios.patch(`/api/v1/user/${userId}`,updateData,{
             headers:{
                 Authorization:`${userInfo.token}`
             }
@@ -39,7 +39,7 @@ function Profile() {
         }catch(err){
             dispatch({
                 type:UPDATE_USER_FAIL,
-                payload:err.response.message
+                payload:err.message
             })
         }
         setUpdated(false);
@@ -69,18 +69,15 @@ function Profile() {
             setDataProfile(userInfo);
         }
          
-            return () =>{
-                setUrlProfile(null)
-            }
     },[])
-   
+
 
     return (
         <> 
-        <div className="profile__page-bg">
+          <div className={userInfo && userInfo.isAdmin ? 'container pageBook__admin' : null}>
         <h1>Profile</h1>
-            {error && <div>{error}</div>}
-            {dataProfile ? dataProfile &&
+            {/* {error && <div>{error}</div>} */}
+            {dataProfile &&
             <div className='profile__page_container'>
                 <ul class="list-group profile__page_info">
                     <li class="list-group-item flex-profile-info">
@@ -131,8 +128,7 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-            </div>:null}
-        <h1>My Book</h1>
+            </div>}
         </div>
         <CartScreen/>
         </>

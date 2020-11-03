@@ -1,13 +1,10 @@
 import React,{useContext,useEffect} from 'react';
-import {Shelf} from '../../fakeData/Shelf';
-import Axios from 'axios';
 import Loader from '../../Loader';
-import BookScreen from '../../BookScreen';
 import {useAuth} from '../../Provider/authProvider';
 import {ProductContext} from '../../Provider/productProvider';
+import {Link} from 'react-router-dom';
 import {LIST_MYPRODUCTS_REQUEST,LIST_MYPRODUCTS_SUCCESS,LIST_MYPRODUCTS_FAIL} from '../../Provider/constants/Constant';
-
-import API from '../../../http-common';
+import Axios from 'axios';
 
 function MyLibrary() {
     const {state:authData} = useAuth();
@@ -15,19 +12,19 @@ function MyLibrary() {
 
     const [state,dispatch] = useContext(ProductContext);
     const {isLoading,error,myLibrary}  = state;
+    console.log('isi state',myLibrary)
 
     useEffect(() => {
-        let source = Axios.CancelToken.source();
         const listMyproducts = async () =>{
                 dispatch({
                     type:LIST_MYPRODUCTS_REQUEST
                 })
             try{
-                const {data:{data}} = await API.get(`/list-mylibrary`,{
+                const {data:{data}} = await Axios.get(`/api/v1/list-mylibrary`,{
                     headers:{
                         Authorization:`${userInfo.token}`
                     }
-                },{cancelToken:source.token})
+                })
                     dispatch({
                         type:LIST_MYPRODUCTS_SUCCESS,
                         payload:data
@@ -41,9 +38,7 @@ function MyLibrary() {
             }
         }
        listMyproducts();
-       return () =>{
-            source.cancel();
-       }
+
     },[])
 
     return (
@@ -52,7 +47,17 @@ function MyLibrary() {
           
              <div className={myLibrary && myLibrary.length > 4 ? 'pages-books':  'pages-books justify-content-start'}>
              {isLoading ? <Loader/> : error ? <div>{error}</div> : 
-              myLibrary ?  myLibrary.map( book => ( <BookScreen key={book.id} {...book}/>) ) : "No Book Available" }
+              myLibrary ?  myLibrary.map( book => (
+                <div className="card" key={book.id}>
+                <Link to={`/detail/${book.id}`}>
+                    <img src={book.cover} className="card-img-top" alt="book"/>
+                </Link>
+                <div className="card-body">
+                <h5 className="card-title">{book.title}</h5>
+                <p className="card-text">{book.author}</p>
+                </div>
+            </div>
+              )): "No Book Available" }
             </div> 
          </div>
     )

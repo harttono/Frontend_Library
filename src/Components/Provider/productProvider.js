@@ -21,134 +21,162 @@ const initialState ={
     myBooks:[],
     categories:[],
     deletedProduct:{},
+    myBooks:[],
 }
 const reducer = (state,action) =>{
     switch(action.type){
         case LIST_PRODUCTS_REQUEST:
             return{
+                ...state,
                 isLoading:true
             }
         case LIST_PRODUCTS_SUCCESS:
             return{
+                ...state,
                 products:action.payload,
                 isLoading:false
             }
         case LIST_PRODUCTS_FAIL:
             return{
+                ...state,
                 error:action.payload,
                 isLoading:false
             }
         case DETAIL_PRODUCT_REQUEST:
             return{
+                ...state,
                 isLoading:true
             }
         case DETAIL_PRODUCT_SUCCESS:
            const  detail = action.payload;
             return{
+                ...state,
                 isLoading:false,
                 detailProduct:[{...detail}]
             }
             
         case DETAIL_PRODUCT_FAIL:
             return{
+                ...state,
                 error:action.payload,
                 isLoading:false
             }
         case LIST_CATEGORY_REQUEST:
             return{
+                ...state,
                 isLoading:true
             }
         case LIST_CATEGORY_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 listCategory:action.payload
             }
         case LIST_CATEGORY_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 error:action.payload
             }
         case LIST_CATEGORY_REQUEST:
             return{
+                ...state,
                 isLoading:true
             }
         case LIST_CATEGORY_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 listCategory:action.payload
             }
        case LIST_CATEGORY_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 error:action.payload
             }
         case LIST_MYPRODUCTS_REQUEST:
             return{
+                ...state,
                 isLoading:true
             }
         case LIST_MYPRODUCTS_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 myLibrary:action.payload
             }
         case LIST_MYPRODUCTS_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 error:action.payload
             }
         case ADD_PRODUCT_REQUEST:
             return{
+                ...state,
                 isLoading:true,
             }
         case ADD_PRODUCT_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 newBook:action.payload
             }
         case ADD_PRODUCT_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 erorr:action.payload
             }
         case GET_PRODUCTS_BY_CATEGORY_REQUEST:
             return{
+                ...state,
                 isLoading:true,
             }
         case GET_PRODUCTS_BY_CATEGORY_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 categories:action.payload
             }
         case GET_PRODUCTS_BY_CATEGORY_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 erorr:action.payload
             }
         case MY_PRODUCTS_REQUEST:
             return{
+                ...state,
                 isLoading:true,
             }
         case MY_PRODUCTS_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 myBooks:action.payload
             }
         case MY_PRODUCTS_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 erorr:action.payload
             }
         case REMOVE_PRODUCT_REQUEST:
             return{
+                ...state,
                 isLoading:true,
             }
         case REMOVE_PRODUCT_SUCCESS:
             return{
+                ...state,
                 isLoading:false,
                 deletedProduct:action.payload
             }
         case REMOVE_PRODUCT_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 erorr:action.payload
             }

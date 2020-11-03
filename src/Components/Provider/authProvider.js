@@ -8,43 +8,48 @@ const initialSate = {
     userInfo:null || Cookie.getJSON('userInfo'),
     isLogin:false || Cookie.getJSON('isLogin'),
     isLoading:false,
-    error:null,
-    info:null
+    error:null
 }
 
 const reducer = (state,action) =>{
     switch(action.type){
         case USER_SIGNIN_REQUEST:
             return{
+                ...state,
                 isLoading:true,
             }       
         case USER_SIGNIN_SUCCESS:
             Cookie.set('userInfo',JSON.stringify({...action.payload}));
             Cookie.set('isLogin',true);
             return{
+                ...state,
                 userInfo:action.payload,
                 isLogin:true,
                 isLoading:false
             }
         case USER_SIGNIN_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 error:action.payload
             }
         case USER_REGISTER_REQUEST:
             return{
+                ...state,
                isLoading:true
             }
         case USER_REGISTER_SUCCESS:
             Cookie.set('userInfo',JSON.stringify({...action.payload}));
             Cookie.set('isLogin',JSON.stringify({isLogin:true}));
             return{
+                ...state,
                 userInfo:action.payload,
                 isLogin:true,
                 isLoading:false
             }
         case USER_REGISTER_FAIL:
             return{
+                ...state,
                 error:action.payload,
                 isLoading:false
             }
@@ -52,26 +57,30 @@ const reducer = (state,action) =>{
             Cookie.remove('userInfo');
             Cookie.remove('isLogin');
             return{
+                ...state,
                userInfo:null,
                isLogin:false
             }
          case UPDATE_USER_REQUEST:
             return{
+                ...state,
                 isLoading:true,
             }       
         case UPDATE_USER_SUCCESS:
+            let url = action.payload
             return{
-                info:action.payload,
-                isLogin:true,
-                isLoading:false
+                ...state,
+                isLoading:false,
+                userInfo:{...state.userInfo,picture:url}
             }
         case UPDATE_USER_FAIL:
             return{
+                ...state,
                 isLoading:false,
                 error:action.payload
             }
         default :
-            throw new Error()
+            return state;
     }
 }
 

@@ -3,7 +3,7 @@ import {BiBookmark} from 'react-icons/bi';
 import {IoIosArrowForward} from 'react-icons/io';
 import {MdDeleteForever} from 'react-icons/md';
 import {useHistory} from 'react-router-dom';
-import API from '../http-common';
+import Axios from 'axios';
 import {Link,useParams} from 'react-router-dom';
 import {DETAIL_PRODUCT_REQUEST,DETAIL_PRODUCT_SUCCESS,DETAIL_PRODUCT_FAIL,
         REMOVE_PRODUCT_REQUEST,REMOVE_PRODUCT_SUCCESS,REMOVE_PRODUCT_FAIL,
@@ -65,7 +65,7 @@ function DetailBook(props) {
                         type:DETAIL_PRODUCT_REQUEST
                     })
             try{
-                const {data:{data}} = await API.get(`/book/${id}`,{
+                const {data:{data}} = await Axios.get(`/api/v1/book/${id}`,{
                     headers:{
                         Authorization:`${userInfo.token}`
                     }
@@ -168,7 +168,7 @@ function BookMarkMessage(props){
                 type:ADD_PRODUCT_REQUEST
             })
         try{    
-        const {data:{message:result}} = await API.post('/book',props.data,{
+        const {data:{message:result}} = await Axios.post('/api/v1/book',props.data,{
             headers:{
                 Authorization:`${userInfo.token}`
             }
@@ -220,7 +220,7 @@ function DeletedMessage(props) {
             type:REMOVE_PRODUCT_REQUEST
         })
     try{
-        const {data:{message}} = await API.delete(`/book/${productId}`,{
+        const {data:{message}} = await Axios.delete(`/api/v1/book/${productId}`,{
             headers:{
                 Authorization:`${userInfo.token}`
             }

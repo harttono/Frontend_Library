@@ -23,7 +23,7 @@ function Navbar() {
             <div className="container">
                 <Link to="/admin"><Brand/></Link>
                 <div className="dropdown-container">
-                    <Link className="dropdown-item"> {userInfo && <img src={userInfo.picture}></img>}</Link>
+                    <Link className="dropdown-item" to="/profile"> {userInfo && <img src={userInfo.picture}></img>}</Link>
                     <DropdownButton title="drop" >
                         <Link className="dropdown-item" to="/mylibrary"><BsCollection/> My Collection</Link>
                         <Link className="dropdown-item" to="/addbook"><MdLibraryAdd/> add book</Link>

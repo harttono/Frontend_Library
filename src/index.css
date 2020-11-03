@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Peddana&display=swap');
+@import url('https://fonts.googleAxioss.com/css2?family=Peddana&display=swap');
 
 
 /* Dashboard Styling */
@@ -458,7 +458,8 @@
     box-shadow:5px 5px 8px rgba(0,0,0,.6);
     position:fixed !important;
     width:100%;
-  }
+    z-index:9999;
+}
 .navbar .container a:hover{
     text-decoration:none;
 }
@@ -502,12 +503,7 @@
 .admin-section table {
     width:100%;
 }
-.admin-section table > thead{
-    color:#ffffff;
-}
-.admin-section table > tbody{
-    background-color:#f8eeee;
-}
+
 .admin-section table > thead > tr > th:last-child{
     text-align:center;
 }

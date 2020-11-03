@@ -7,9 +7,6 @@ import {useAuth} from './Provider/authProvider';
 import Axios from 'axios';
 import {ProductContext} from './Provider/productProvider';
 import Fileuploader from './FileUploadScreen';
-import API from '../http-common';
-
-
 
 
 function AddBook(props) {
@@ -18,7 +15,6 @@ function AddBook(props) {
     const [show,setShow] = useState(false);
     const [showMessage,setShowMessage] = useState(false);
     const [categoryId,setCategoryId] = useState(1);
-    const [able,disable] = useState (false);
     const [state,dispatch] = useContext(ProductContext);
     const {isLoading,error,listCategory,newBook:message}  = state;
     const [urlFiles,setUrlFiles] = useState([]);
@@ -38,15 +34,14 @@ function AddBook(props) {
     }
 
 
-    const openModal = () =>{
-        setShow(true);
-    }
+    const openModal = () =>  setShow(true);
 
-    const closeModal = () =>{
-        setShow(false);
-        props.history.push('/profile')
-    }
+    const closeModal = () => setShow(false);
 
+    const closeMessage = () =>{
+        setShowMessage(false);
+        props.history.push('/profile');
+    }
 
     const BookData = {
         title:formData.title,
@@ -58,18 +53,19 @@ function AddBook(props) {
         pages:parseInt(formData.pages),
         ISBN:parseInt(formData.ISBN),
         cover:urlFiles[0],
-        attachment:urlFiles[1],
+        file:urlFiles[1],
         status:status,
         description:formData.description
     }
    
+
     const onSaved = async (e) =>{
         e.preventDefault();
             dispatch({
                 type:ADD_PRODUCT_REQUEST
             })
         try{    
-        const {data:{message}} = await API.post('/book',BookData,{
+        const {data:{message}} = await Axios.post('/api/v1/book',BookData,{
             headers:{
                 Authorization:`${userInfo.token}`
             }
@@ -85,7 +81,11 @@ function AddBook(props) {
             })
         }
         
-        setShowMessage(true);
+       if(userInfo.isAdmin){
+           props.history.push('/profile')
+       }else{
+            setShowMessage(true);
+       }
     }
 
     // get urls
@@ -105,13 +105,11 @@ function AddBook(props) {
                     Authorization:`${userInfo.token}`
                 }
             })
-            console.log('data di detail',data)
             dispatch({
                 type:LIST_CATEGORY_SUCCESS,
                 payload:data
             })
         }catch(error){
-            console.log('isi error')
             dispatch({
                 type:LIST_CATEGORY_FAIL,
                 payload:error
@@ -166,14 +164,14 @@ function AddBook(props) {
                     <button type="button" className="upload-btn" onClick={openModal} >
                       <span> Attach Book File</span><CgAttachment/>       
                     </button>
-                    <Fileuploader able={able} show={show} closeModal={() => setShow(false)}/>
+                    <Fileuploader show={show}  closeModal={closeModal} getUrls = {getUrls}/>
                 </div>
             </form>
             <div className="add-book__page-btn">
                 <button class='add-book-btn' onClick={(e) => onSaved(e)} disabled={urlFiles == 0}>
                     <span>Add Book</span><BiBookAdd/>
                 </button>
-                <Message show={showMessage} hide = {closeModal} data={message}/>
+                <Message show={showMessage} hide ={closeMessage} data={message}/>
             </div>
         </div>
     )

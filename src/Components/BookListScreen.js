@@ -1,9 +1,9 @@
 import React,{useEffect,useContext,useState} from 'react';
-import BookScreen from './BookScreen';
+import {Link} from 'react-router-dom';
 import Loader from './Loader';
-import Axios from 'axios';
 import {ProductContext} from './Provider/productProvider';
 import {useAuth} from './Provider/authProvider';
+import Axios from 'axios';
 
 import {Dropdown,ButtonGroup,DropdownButton} from 'react-bootstrap';
 import {LIST_PRODUCTS_REQUEST,LIST_PRODUCTS_SUCCESS,LIST_PRODUCTS_FAIL,LIST_CATEGORY_REQUEST,LIST_CATEGORY_SUCCESS,LIST_CATEGORY_FAIL, GET_PRODUCTS_BY_CATEGORY_REQUEST, GET_PRODUCTS_BY_CATEGORY_SUCCESS, GET_PRODUCTS_BY_CATEGORY_FAIL} from './Provider/constants/Constant';
@@ -16,6 +16,7 @@ function BookListScreen(props) {
         const [books,setBooks] = useState([]);
         const [listOfCategory,setListOfCategory] = useState([]);
         const {isLoading,error,products,listCategory,categories} = state;
+        console.log('isi state',state)
         
         let handleSelect = (key) =>{
             if(key == 0){
@@ -144,7 +145,15 @@ function BookListScreen(props) {
                 <div className={bookList && bookList.length > 3 ? 'pages-books':  'pages-books justify-content-start'}>
                 { isLoading ? <Loader/> : error ? <div>{error}</div> :
                     bookList.length > 0 ? bookList.map( book => (
-                       <BookScreen key={book.id} {...book} />
+                        <div className="card" key={book.id}>
+                        <Link to={`/detail/${book.id}`}>
+                            <img src={book.cover} className="card-img-top" alt="book"/>
+                        </Link>
+                        <div className="card-body">
+                        <h5 className="card-title">{book.title}</h5>
+                        <p className="card-text">{book.author}</p>
+                        </div>
+                    </div>
                  )) : <div className="text-center alert alert-warning w-100">No Book Available.</div>} 
                 </div>    
             </>

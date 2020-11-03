@@ -5,7 +5,7 @@ import {useAuth} from './Provider/authProvider';
 import {AdminProductContext} from './Provider/AdminDataProvider';
 import {Link} from 'react-router-dom';
 import Loader from './Loader';
-import API from '../http-common';
+import Axios from 'axios';
 import {LIST_PRODUCTS_USER_REQUEST,LIST_PRODUCTS_USER_SUCCESS,LIST_PRODUCTS_USER_FAIL, 
        UPDATE_PRODUCT_USER_REQUEST,UPDATE_PRODUCT_USER_SUCCESS,UPDATE_PRODUCT_USER_FAIL,DELETE_PRODUCT_USER_REQUEST,DELETE_PRODUCT_USER_SUCCESS,DELETE_PRODUCT_USER_FAIL } from './Provider/constants/Constant';
 
@@ -22,7 +22,7 @@ export default function Admin() {
             type:LIST_PRODUCTS_USER_REQUEST
         })
     try{
-        const {data:{data}} = await API.get(`/list_transaction`,{
+        const {data:{data}} = await Axios.get(`/api/v1/list_transaction`,{
             headers:{
                 Authorization:`${userInfo.token}`
             }
@@ -48,7 +48,7 @@ export default function Admin() {
                 type:UPDATE_PRODUCT_USER_REQUEST
             })
         try{    
-        const {data:{message}} = await API.patch(`/list-transaction/${id}`,updateData,{
+        const {data:{message}} = await Axios.patch(`/api/v1/list-books/${id}`,updateData,{
             headers:{
                 Authorization:`${userInfo.token}`
             }
@@ -63,7 +63,7 @@ export default function Admin() {
         }catch(err){
             dispatch({
                 type:UPDATE_PRODUCT_USER_FAIL,
-                payload:err.response.data.message
+                payload:err.message
             })
         }
         
@@ -75,7 +75,7 @@ export default function Admin() {
                 type:DELETE_PRODUCT_USER_REQUEST
             })
         try{    
-        const {data:{message}} = await API.delete(`/list-transaction/${id}`,{
+        const {data:{message}} = await Axios.delete(`/api/v1/book/${id}`,{
             headers:{
                 Authorization:`${userInfo.token}`
             }
@@ -106,15 +106,15 @@ export default function Admin() {
         <IconContext.Provider value={{color:'#3BB54A',size:'30px'}}>
             <div className="container  admin-section">
                 <h2>Book Verification</h2>
-                <table class="table table-striped">
+                <table class="table table-striped text-dark">
                     <thead>
                         <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">User Or Author</th>
-                            <th scope="col">ISBN</th>
-                            <th scope="col">E-Book</th>
-                            <th scope="col">Status Payment</th>
-                            <th scope="col">Action</th>
+                            <th>No</th>
+                            <th>User Or Author</th>
+                            <th>ISBN</th>
+                            <th>E-Book</th>
+                            <th>Status Payment</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>

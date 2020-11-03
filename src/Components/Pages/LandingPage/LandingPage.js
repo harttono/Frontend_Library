@@ -22,16 +22,11 @@ function LandingPage(props) {
         setSignIn(false);
     }
     useEffect(() => {
-        const abortSign = new AbortController();
             if(isLogin && !userInfo.isAdmin){
                 props.history.push('/home')
             }else if(isLogin && userInfo.isAdmin){
                 props.history.push('/admin')
             }
-    
-        return () =>{
-            abortSign.abort();
-        }
       },[userInfo])
     return (
 
