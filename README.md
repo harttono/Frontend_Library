@@ -9,7 +9,7 @@
 ![register](https://user-images.githubusercontent.com/58875585/100773960-25ad7300-3434-11eb-83c5-13cb6ec4c016.png)
 ### HOME PAGE
 ![home](https://user-images.githubusercontent.com/58875585/100774061-41b11480-3434-11eb-95c5-cc8d8057a227.png)
-### ADD LITERATURE
+### ADD BOOK
 ![add](https://user-images.githubusercontent.com/58875585/100774197-686f4b00-3434-11eb-835a-b580b25eb1e5.png)
 ### ADD CATEGORI
 ![category](https://user-images.githubusercontent.com/58875585/100774316-88067380-3434-11eb-900e-10aab978368a.png)
