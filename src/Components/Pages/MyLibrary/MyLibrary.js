@@ -3,61 +3,67 @@ import Loader from '../../Loader';
 import {useAuth} from '../../Provider/authProvider';
 import {ProductContext} from '../../Provider/productProvider';
 import {Link} from 'react-router-dom';
-import {LIST_MYPRODUCTS_REQUEST,LIST_MYPRODUCTS_SUCCESS,LIST_MYPRODUCTS_FAIL} from '../../Provider/constants/Constant';
-import Axios from 'axios';
+import {LIST_BOOKMARK_REQUEST,LIST_BOOKMARK_SUCCESS,LIST_BOOKMARK_FAIL} from '../../Provider/constants/Constant';
+import {API} from '../../../http';
+import {useBookMark} from '../../Provider/bookmarkProvider'; 
 
 function MyLibrary() {
     const {state:authData} = useAuth();
     const {userInfo} = authData;
-
-    const [state,dispatch] = useContext(ProductContext);
-    const {isLoading,error,myLibrary}  = state;
-    console.log('isi state',myLibrary)
+    const {state:BookMark,dispatch} = useBookMark();
+    const {Bookmarks,isLoading,error}  = BookMark;
+    console.log('isi state',Bookmarks)
 
     useEffect(() => {
-        const listMyproducts = async () =>{
+            let unmounted = false;
+            const checkBookmarks = async () =>{
                 dispatch({
-                    type:LIST_MYPRODUCTS_REQUEST
+                    type:LIST_BOOKMARK_REQUEST
                 })
-            try{
-                const {data:{data}} = await Axios.get(`/api/v1/list-mylibrary`,{
+                try{
+                const {data:{data}} = await API.get(`/bookmarks`,{
                     headers:{
-                        Authorization:`${userInfo.token}`
+                        Authorization:`Bearer ${userInfo.token}`
                     }
                 })
-                    dispatch({
-                        type:LIST_MYPRODUCTS_SUCCESS,
-                        payload:data
-                    })
-            }catch(error){
-                    dispatch({
-                        type:LIST_MYPRODUCTS_FAIL,
-                        payload:error.response.data.message
-                    })
-                
-            }
-        }
-       listMyproducts();
-
+                    if(!unmounted){
+                        dispatch({
+                            type:LIST_BOOKMARK_SUCCESS,
+                            payload:data
+                        })
+                    }
+                    console.log('isi data',data)
+                }catch(error){
+                    if(!unmounted){
+                        dispatch({
+                            type:LIST_BOOKMARK_FAIL,
+                            payload:error.response.data.message
+                        })
+                    }
+                }  
+                    
+            } 
+    checkBookmarks();
     },[])
 
     return (
          <div className={userInfo && userInfo.isAdmin ? "container pageBook__admin" : "pageBook__Section"}>
              <h1>My Library</h1>
           
-             <div className={myLibrary && myLibrary.length > 4 ? 'pages-books':  'pages-books justify-content-start'}>
+             <div className={Bookmarks && Bookmarks.length > 4 ? 'pages-books':  'pages-books justify-content-start'}>
              {isLoading ? <Loader/> : error ? <div>{error}</div> : 
-              myLibrary ?  myLibrary.map( book => (
-                <div className="card" key={book.id}>
-                <Link to={`/detail/${book.id}`}>
-                    <img src={book.cover} className="card-img-top" alt="book"/>
+              Bookmarks &&  Bookmarks.map( (book,index) => (
+                <div className="card" key={index}>
+                <Link to={`/detail/${book.books.id}`}>
+                    <img src={book.books.cover} className="card-img-top" alt="book"/>
                 </Link>
                 <div className="card-body">
-                <h5 className="card-title">{book.title}</h5>
-                <p className="card-text">{book.author}</p>
+                <h5 className="card-title">{book.books.title}</h5>
+                <p className="card-text">{book.books.author}</p>
                 </div>
             </div>
-              )): "No Book Available" }
+              ))}
+              {Bookmarks.length === 0 && <p>No Book Available</p> }
             </div> 
          </div>
     )

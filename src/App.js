@@ -4,7 +4,7 @@ import LandingPage from './Components/Pages/LandingPage/LandingPage';
 import Admin from './Components/AdminScreen';
 import PrivateRoute from './Components/Route/PrivateRoutes';
 import {useAuth} from './Components/Provider/authProvider';
-import BookList from './Components/BookListScreen';
+import Home from './Components/HomeScreen';
 import Profile from './Components/ProfileScreen';
 import Navbar from './Components/NavbarScreen';
 import MyLibrary from './Components/Pages/MyLibrary/MyLibrary';
@@ -19,7 +19,7 @@ import NoPage from './Components/NoPage'
 const userRoute = [
   {
     path:'/home',
-    component:BookList
+    component:Home
   },
   {
     path:'/profile',
@@ -65,7 +65,7 @@ function App() {
                   <Route exact path='/' component={LandingPage}/>  
                   <Route path={['/home','/profile','/mylibrary','/addbook','/detail/:id','/read/:id','/admin','/category']}>
                     <div  className={userInfo && !userInfo.isAdmin ? "container-fluid" : null}>
-                          <div className={userInfo && userInfo.isAdmin ? '' : 'row pages-container'}>
+                          <div className={userInfo && userInfo.isAdmin ? null : 'row pages-container'}>
                               {userInfo && userInfo.isAdmin ?
                                 <div>
                                     <Navbar/>

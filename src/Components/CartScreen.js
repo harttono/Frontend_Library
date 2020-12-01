@@ -4,7 +4,7 @@ import {useAuth} from './Provider/authProvider';
 import {Link} from 'react-router-dom';
 import Loader from './Loader';
 import {MY_PRODUCTS_REQUEST,MY_PRODUCTS_SUCCESS,MY_PRODUCTS_FAIL} from './Provider/constants/Constant';
-import Axios from 'axios';
+import {API} from '../http';
 
 export default function CartScreen() {
     const [state,dispatch] = useContext(ProductContext);
@@ -17,9 +17,9 @@ export default function CartScreen() {
                 type:MY_PRODUCTS_REQUEST
             })
         try{
-            const {data:{data}} = await Axios.get(`/api/v1/book-user`,{
+            const {data:{data}} = await API.get(`/book-user`,{
                 headers:{
-                    Authorization:`${userInfo.token}`
+                    Authorization:`Bearer ${userInfo.token}`
                 }
             })
         
@@ -32,21 +32,22 @@ export default function CartScreen() {
             console.log('isi error')
             dispatch({
                 type:MY_PRODUCTS_FAIL,
-                payload:error
+                payload:error.response.data.message
             })
             }
         }
 
         getMybook();
     },[])
+    
     return (
         <>  
           <div className={userInfo && userInfo.isAdmin ? 'container mt-3' : 'pageBook__Section'}>
                 <h1>My Book</h1>
                 <div className={myBooks && myBooks.length > 4 ? 'pages-books':  'pages-books justify-content-start'}>
-                { isLoading ? <Loader/> : error ? <div>{error}</div> : myBooks.length > 0 ? myBooks.map( book => 
-                    book.userId.id == userInfo.id &&<div className={book.status == 'approved' ? 'card':'card pending-status-card'}>
-                        <Link to={`/detail/${book.id}`}>
+                { isLoading ? <Loader/> : error ? <div>{error}</div> : myBooks ? myBooks.map( (book,index) => 
+                    book.userId.id == userInfo.id &&<div className={book.status == 'approved' ? 'card':'card pending-status-card'} key={index}>
+                        <Link to={book.status === 'approved' || book.status === 'cancelled' ? `/detail/${book.id}` : "#" }>
                             <img src={book.cover} className="card-img-top" alt="book"/>
                         </Link>
                         <div className="card-body">

@@ -67,7 +67,8 @@ const reducer = (state,action) =>{
                 isLoading:true,
             }       
         case UPDATE_USER_SUCCESS:
-            let url = action.payload
+            let url = action.payload;
+            console.log('isi url',url);
             return{
                 ...state,
                 isLoading:false,

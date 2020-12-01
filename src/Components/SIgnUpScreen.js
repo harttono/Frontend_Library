@@ -1,12 +1,17 @@
 import React,{useState,useEffect} from 'react';
-import {Modal,Button,Form,Spinner} from 'react-bootstrap';
+import {Modal,Button,Form,Spinner,InputGroup} from 'react-bootstrap';
 import {useAuth} from './Provider/authProvider';
 import {USER_REGISTER_REQUEST,USER_REGISTER_SUCCESS,USER_REGISTER_FAIL} from './Provider/constants/Constant';
-import Axios from 'axios';
+import {API} from '../http';
+import * as yup from 'yup';
+import {Formik} from 'formik';
+import {AiOutlineEye,AiOutlineEyeInvisible} from 'react-icons/ai';
+
 function SignUp(props) {
     const {state,dispatch} = useAuth();
     const [info,setInfo] = useState('');
     const {error,isLoading} = state;
+    const [visible,setVisible] = useState(false);
 
 
     const[formData,setFormData]=useState({
@@ -22,14 +27,23 @@ function SignUp(props) {
       setFormData({...formData,[e.target.name]:e.target.value})
     }
     const {email,password,fullname,gender,phone,address} = formData;
+
+    //validation schema
+    const schema = yup.object().shape({
+      email:yup.string().required().email('Email is invalid format'),
+      password:yup.string().required().min(8,'The password must be a minimum of 8 characters in length'),
+      fullname:yup.string().required().min(3,'The fullname must be a minimum of 3 characters in length'),
+      gender:yup.string().required(),
+      phone:yup.number().min(13).required(),
+      address:yup.string().required()
+    });
   
-    const handleSubmit = async (e) =>{
-      e.preventDefault();
+    const onSaved = async (values) =>{
       dispatch({
         type:USER_REGISTER_REQUEST,
       })
       try{
-        const {data:{data}} = await Axios.post('/api/v1/register',{...formData});
+        const {data:{data}} = await API.post('/register',{...values});
         dispatch({
           type:USER_REGISTER_SUCCESS,
           payload:data
@@ -40,20 +54,26 @@ function SignUp(props) {
           payload:error.response.data.message
         })
       }
-      
     }
 
 
-    useEffect(() => {
-      if(error){
+  if(info){
+      setTimeout( () =>{
+        setInfo('')
+      },2500)
+  }
+  
+  
+  useEffect(() => {
+    if(error){
         setInfo(error);
-      }
-        setTimeout(
-          ()=>{
-           setInfo('');
-          }
-          ,3000)
-    },[])
+        dispatch({
+          type:USER_REGISTER_FAIL,
+          payload:null
+        })
+    }
+  },[error])
+
 
     return (
       <>
@@ -68,33 +88,109 @@ function SignUp(props) {
           <div className="form-section">
             <Modal.Body>
               <div className="form-content">
-                <Form>
-                    {!isLoading && error ? <div className="flash_info">{error}</div> : null} 
+                <Formik
+                  validationSchema={schema}
+                  onSubmit={ values => onSaved(values)}
+                  initialValues={{
+                    email:'',
+                    password:'',
+                    fullname:'',
+                    gender:'male',
+                    phone:'',
+                    address:''
+                  }}
+                 >
+                  {({handleSubmit,handleChange,handleBlur,values,touched,errors}) => (
+                      <Form noValidate onSubmit={handleSubmit}>
+                    {info && <div className="flash_info">{info}</div>} 
                     <Form.Group>
-                        <Form.Control type="email" name="email" placeholder="Email" autoComplete="true" value={email} onChange={(e) => handleChange(e)}/>
+                        <Form.Control 
+                            type="email" 
+                            name="email" 
+                            placeholder="Email" 
+                            autoComplete="true"  
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isValid={touched.email && !errors.email}
+                            isInvalid={!!errors.email}/>
+                            <p className="text-danger"> {errors.email}</p>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Control type="password" name="password" placeholder="Password" value={password} onChange={(e) => handleChange(e)} />
+                      <InputGroup>
+                        <Form.Control 
+                            type={visible ? 'text' : 'password'} 
+                            name="password" 
+                            placeholder="Password" 
+                            autoComplete="true"  
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isInvalid={!!errors.password}/>
+                            <InputGroup.Append>
+                              <InputGroup.Text id="password" style={{cursor:'pointer'}} onClick={ () => setVisible(!visible)}>
+                                {visible ? <AiOutlineEye/> : <AiOutlineEyeInvisible/>}
+                              </InputGroup.Text>
+                            </InputGroup.Append>
+                      </InputGroup>
+                      <p className="text-danger"> {errors.password}</p>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Control type="text" name="fullname" placeholder="Fullname" value={fullname} onChange={(e) => handleChange(e)}/>
+                        <Form.Control 
+                            type="text" 
+                            name="fullname" 
+                            placeholder="Fullname" 
+                            autoComplete="true"  
+                            value={values.fullname}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isValid={touched.fullname && !errors.fullname}
+                            isInvalid={!!errors.fullname}/>
+                            <p className="text-danger"> {errors.fullname}</p>
                     </Form.Group>
                     <Form.Group>
-                        <select className="select-control" name="gender" value={gender} onChange={(e) => handleChange(e)}>
-                          <option value="Select your gender">Select your gender</ option>
+                        <Form.Control 
+                          as="select"  
+                          name="gender"   
+                          value={values.gender} 
+                          onChange={handleChange}  
+                          onBlur={handleBlur}  >
+                          <option disabled value='DEFAULT'>Select your gender</option>
                           <option value="male">Male</option>
                           <option value="female">Female</option>
-                        </select>
+                        </Form.Control>
+                        <p className="text-danger"> {errors.gender}</p>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Control type="text" name="phone" placeholder="Phone" value={phone} onChange={(e) => handleChange(e)}/>
+                        <Form.Control 
+                            type="text" 
+                            name="phone" 
+                            placeholder="Phone" 
+                            autoComplete="true"  
+                            value={values.phone}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isValid={touched.phone && !errors.phone}
+                            isInvalid={!!errors.phone}/>
+                            <p className="text-danger">{errors.phone}</p>
                     </Form.Group>
                     <Form.Group>
-                        <textarea className="textarea-control" name="address" rows="2"  placeholder="Address" value={address} onChange={(e) => handleChange(e)} />
+                        <Form.Control as="textarea" 
+                            name="address" 
+                            rows="2"  
+                            placeholder="Address"  
+                            autoComplete="true"  
+                            value={values.address}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isValid={touched.address && !errors.address}
+                            isInvalid={!!errors.address}/>
+                            <p className="text-danger">{errors.address}</p>
                     </Form.Group>
                     <Form.Group>
-                        <button className='btn-modal-signUp btn btn-danger outline-0 w-100' onClick={ e => handleSubmit(e)}>{isLoading ? <Spinner as="span" animation="grow" size="sm" role="status"aria-hidden="true"/> : null}
-                          <span className="mx-2">{' '}</span>Sign Up</button>
+                        <button type="submit" className='btn-modal-signUp btn btn__primary outline-0 w-100' onClick={ (e) => handleSubmit(e)}>
+                        {isLoading ? <Spinner as="span" animation="grow" size="sm" role="status"aria-hidden="true"/>: 'Sign Up' }
+                        </button>
                     </Form.Group>
                     <Form.Group>
                         <div className='exclamation-text'>
@@ -102,6 +198,8 @@ function SignUp(props) {
                         </div>
                     </Form.Group>
                 </Form>
+                )}
+              </Formik>
               </div>
             </Modal.Body>
           </div>

@@ -6,7 +6,7 @@ import {Spinner} from 'react-bootstrap';
 import Fileuploader from './FileUploadScreen';
 import {useAuth} from './Provider/authProvider';
 import { UPDATE_USER_FAIL, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from './Provider/constants/Constant';
-import Axios from 'axios';
+import {API} from '../http';
 
 function Profile() {
     const {state:authData,dispatch} = useAuth();
@@ -26,14 +26,14 @@ function Profile() {
                 type:UPDATE_USER_REQUEST
             })
         try{    
-        const {data:{picture}} = await Axios.patch(`/api/v1/user/${userId}`,updateData,{
+        const {data} = await API.patch(`/user/${userId}`,updateData,{
             headers:{
-                Authorization:`${userInfo.token}`
+                Authorization:`Bearer ${userInfo.token}`
             }
         })
             dispatch({
                 type:UPDATE_USER_SUCCESS,
-                payload:picture,
+                payload:urlProfile,
             })
 
         }catch(err){
@@ -48,6 +48,9 @@ function Profile() {
     // get urls
     const getUrls = (url) =>{
         setUrlProfile(url);
+        if(url){
+            setUpdated(true)
+        }
     }
 
     
@@ -58,7 +61,6 @@ function Profile() {
     
     const closeModal = () =>{
         setShow(false);   
-        setUpdated(true)
     }
 
     
@@ -68,19 +70,24 @@ function Profile() {
             setUrlProfile(userInfo.picture);
             setDataProfile(userInfo);
         }
-         
-    },[])
+        return () =>{
+            dispatch({
+                type:UPDATE_USER_FAIL,
+                payload:null
+            })
+        }
+    },[userInfo])
 
 
     return (
         <> 
           <div className={userInfo && userInfo.isAdmin ? 'container pageBook__admin' : null}>
         <h1>Profile</h1>
-            {/* {error && <div>{error}</div>} */}
+            {error && <div>{error}</div>}
             {dataProfile &&
             <div className='profile__page_container'>
-                <ul class="list-group profile__page_info">
-                    <li class="list-group-item flex-profile-info">
+                <ul className="list-group profile__page_info">
+                    <li className="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
                             <span><MdLocalPostOffice/></span>
                         </div>
@@ -89,7 +96,7 @@ function Profile() {
                             <p>Email</p>
                         </div>
                     </li>
-                    <li class="list-group-item flex-profile-info">
+                    <li className="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
                             <span><FaTransgender/></span>
                         </div>
@@ -98,7 +105,7 @@ function Profile() {
                             <p>Gender</p>
                         </div>
                     </li>
-                    <li class="list-group-item flex-profile-info">
+                    <li className="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
                             <span><FaPhoneAlt/></span>
                         </div>
@@ -107,7 +114,7 @@ function Profile() {
                             <p>Mobile Phone</p>
                         </div>
                     </li>
-                    <li class="list-group-item flex-profile-info">
+                    <li className="list-group-item flex-profile-info">
                         <div className="profile__icon_info">
                             <span><FaMapMarkerAlt/></span>
                         </div>
@@ -124,7 +131,7 @@ function Profile() {
                             {updated ? <button className="btn btn-success w-100" onClick={ () => onUpdated(dataProfile.id)}>
                             {isLoading ? <Spinner as="span" animation="grow" size="sm" role="status"aria-hidden="true"/> : null}
                             <span className="mx-2">{' '}</span>save</button> :  <button className="btn btn-danger w-100" onClick={openModal}>Change your profile</button>}
-                            <Fileuploader show={show} able={true} closeModal={closeModal} getUrls = {getUrls}/>
+                            <Fileuploader show={show} types={['.jpg','.png','.jpeg']}  closeModal={closeModal} getUrls = {getUrls}/>
                         </div>
                     </div>
                 </div>

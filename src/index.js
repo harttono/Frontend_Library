@@ -7,15 +7,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {AuthProvider} from './Components/Provider/authProvider';
 import {ProductContextProvider} from './Components/Provider/productProvider';
 import {AdminProductProvider} from './Components/Provider/AdminDataProvider';
+import {BookMarkContextProvider} from './Components/Provider/bookmarkProvider';
 
 
 ReactDOM.render(
           <AuthProvider>
-            <AdminProductProvider>
-              <ProductContextProvider>
-                <App/>
-              </ProductContextProvider>
-            </AdminProductProvider>
+            <BookMarkContextProvider>
+              <AdminProductProvider>
+                <ProductContextProvider>
+                  <App/>
+                </ProductContextProvider>
+              </AdminProductProvider>
+            </BookMarkContextProvider>
           </AuthProvider>,
   document.getElementById('root')
 );

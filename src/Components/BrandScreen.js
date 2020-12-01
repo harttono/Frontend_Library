@@ -1,5 +1,4 @@
 import React from 'react';
-// import './Brand.css';
 function BrandScreen() {
     return (
         <div className='logo-pages'>

@@ -1,12 +1,16 @@
 import React,{useEffect,useContext,useState} from 'react';
-import {Modal} from 'react-bootstrap';
+import {Modal,Form} from 'react-bootstrap';
 import {CgAttachment} from 'react-icons/cg';
 import {BiBookAdd} from 'react-icons/bi';
 import {LIST_CATEGORY_REQUEST,LIST_CATEGORY_SUCCESS,LIST_CATEGORY_FAIL,ADD_PRODUCT_REQUEST,ADD_PRODUCT_SUCCESS,ADD_PRODUCT_FAIL} from './Provider/constants/Constant';
 import {useAuth} from './Provider/authProvider';
-import Axios from 'axios';
+import {API} from '../http';
 import {ProductContext} from './Provider/productProvider';
 import Fileuploader from './FileUploadScreen';
+import path from 'path';
+import { Formik} from "formik";
+import * as Yup from "yup";
+import EpubUploader from './services/Uploder';
 
 
 function AddBook(props) {
@@ -17,81 +21,101 @@ function AddBook(props) {
     const [categoryId,setCategoryId] = useState(1);
     const [state,dispatch] = useContext(ProductContext);
     const {isLoading,error,listCategory,newBook:message}  = state;
-    const [urlFiles,setUrlFiles] = useState([]);
     const [status,setStatus] = useState('');
-
-    const [formData,setFormData] = useState({
-        title:'',
-        author:'',
-        publication:'',
-        pages:'',
-        ISBN:'',
-        description:''
-    })
-    
-    const handleChange = (e) =>{
-        setFormData({...formData,[e.target.name]:e.target.value})
-    }
+    const [cover,setCover] = useState('');
+    const [file,setFile] = useState('');
+    const [visible,setVisible] = useState(false);
 
 
     const openModal = () =>  setShow(true);
 
-    const closeModal = () => setShow(false);
-
-    const closeMessage = () =>{
-        setShowMessage(false);
+    const closeModal = () => {
+        setShow(false);
         props.history.push('/profile');
     }
 
-    const BookData = {
-        title:formData.title,
-        author:formData.author,
-        publication:parseInt(formData.publication),
-        category:{
-            id:categoryId
-        },
-        pages:parseInt(formData.pages),
-        ISBN:parseInt(formData.ISBN),
-        cover:urlFiles[0],
-        file:urlFiles[1],
-        status:status,
-        description:formData.description
-    }
-   
 
-    const onSaved = async (e) =>{
-        e.preventDefault();
-            dispatch({
-                type:ADD_PRODUCT_REQUEST
+      // submit    
+      const handleSubmit = async (values) =>{
+        const {title,author,publication,pages,ISBN,description} = values;
+                // add new data 
+                const BookData = {
+                    title:title,
+                    author:author,
+                    publication:parseInt(publication),
+                    category:{
+                        id:categoryId
+                    },
+                    pages:parseInt(pages),
+                    ISBN:parseInt(ISBN),
+                    cover:cover,
+                    file:file,
+                    status:status,
+                    description:description
+                }
+
+                dispatch({
+                    type:ADD_PRODUCT_REQUEST
+                })
+            try{    
+            const {data:{message}} = await API.post('/book',BookData,{
+                headers:{
+                    Authorization:`Bearer ${userInfo.token}`
+                }
             })
-        try{    
-        const {data:{message}} = await Axios.post('/api/v1/book',BookData,{
-            headers:{
-                Authorization:`${userInfo.token}`
+                dispatch({
+                    type:ADD_PRODUCT_SUCCESS,
+                    payload:message
+                })
+            }catch(err){
+                dispatch({
+                    type:ADD_PRODUCT_FAIL,
+                    payload:err.response.data.message
+                })
             }
-        })
-            dispatch({
-                type:ADD_PRODUCT_SUCCESS,
-                payload:message
-            })
-        }catch(err){
-            dispatch({
-                type:ADD_PRODUCT_FAIL,
-                payload:err.response.data.message
-            })
-        }
-        
-       if(userInfo.isAdmin){
-           props.history.push('/profile')
-       }else{
-            setShowMessage(true);
-       }
+            
+           if(userInfo.isAdmin){
+               props.history.push('/profile')
+           }else{
+                setShowMessage(true);
+           }
     }
 
     // get urls
-    const getUrls = (urls) =>{
-        setUrlFiles([...urlFiles,urls])
+    const getUrls = (url) =>{
+        const ext = path.extname(url).toLowerCase();
+        if(ext === '.png' || ext === '.jpg' || ext === '.jpeg'){
+            setCover(url);
+        }
     }
+
+    const getEpubUrl = (epubUrl) =>{
+        if(epubUrl){
+            setFile(epubUrl); 
+        }   
+    }
+
+
+    // validation schema
+    const schema =  Yup.object().shape({
+        title: Yup.string()
+            .min(3, "Mininum 3 characters")
+            .required("Required!"),
+        author: Yup.string()
+            .min(3, "Mininum 3 characters")
+            .required("Required!"),
+        publication:Yup.number()
+            .required("Required!"),
+        pages:
+            Yup.number()
+            .required("Required!"),
+        ISBN:Yup.number()
+            .min(11,"Mininum 11 characters")
+            .required("Required!"),
+        description:Yup.string()
+            .min(3, "Mininum 3 characters")
+            .required("Required!")
+        })
    
 
     useEffect(() => {
@@ -100,9 +124,9 @@ function AddBook(props) {
                 type:LIST_CATEGORY_REQUEST
             })
         try{
-            const {data:{data}} = await Axios.get(`/api/v1/category`,{
+            const {data:{data}} = await API.get(`/category`,{
                 headers:{
-                    Authorization:`${userInfo.token}`
+                    Authorization:`Bearer ${userInfo.token}`
                 }
             })
             dispatch({
@@ -133,46 +157,121 @@ function AddBook(props) {
     return (
         <div className={userInfo && userInfo.isAdmin ? 'container pageBook__admin' : 'add-book__page'}>
             <h1>Add Book</h1>
-            <form>
-                <div className="form-group">
-                    <input type="text" name="title" autoComplete="off" className="form-control bg-light" placeholder="Title" onChange={ (e) => handleChange(e)}/>
-                </div>
-                <div className="form-group">
-                    <input type="text" name="author" autoComplete="off" className="form-control bg-light" placeholder="Author" onChange={ (e) => handleChange(e)}/>
-                </div>
-                <div className="form-group">
-                    <input type="text" name="publication"   autoComplete="off" className="form-control bg-light" placeholder="Publication Date"  onChange={ (e) => handleChange(e)}/>
-                </div>
-                <div className="form-group">
-                        <select className=" w-100  p-2 select-category"  onChange={ (e) => setCategoryId(e.target.value)}>
-                            <option value='choose'>Choose a category book</option>
-                            {!error && listCategory ? listCategory.map( category => 
+            <Formik
+                  validationSchema={schema}
+                  onSubmit={values => handleSubmit(values)}
+                  initialValues={{
+                    title: "",
+                    author: "",
+                    publication: "",
+                    pages:"",
+                    ISBN:"",
+                    category:{
+                        id:categoryId
+                    },
+                    cover:cover ? cover : null,
+                    file:file ? file : null,
+                    status:status ? status : null,
+                    description:""
+                  }}
+                 >
+                 {({handleSubmit,handleChange,handleBlur,values,touched,errors}) => (
+                <Form onSubmit={handleSubmit} noValidate>
+                    <Form.Group>
+                        <Form.Control type="text" 
+                                name="title"  
+                                value={values.title}
+                                onChange={handleChange} 
+                                onBlur={handleBlur}
+                                isValid={touched.title && !errors.title}
+                                isInvalid={!!errors.title} 
+                                placeholder="Title"/>
+                              <p className="text-danger"> {errors.title}</p>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Control type="text" 
+                               name="author"  
+                               value={values.author}
+                               onChange={handleChange} 
+                               onBlur={handleBlur}
+                               isValid={touched.author && !errors.author}
+                               isInvalid={!!errors.author} 
+                               placeholder="Author"/>
+                              <p className="text-danger"> {errors.title}</p>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Control type="text" 
+                               name="publication"    
+                               value={values.publication}
+                               onChange={handleChange} 
+                               onBlur={handleBlur}
+                               isValid={touched.publication && !errors.publication}
+                               isInvalid={!!errors.publication} 
+                               placeholder="Publication Date" />
+                               <p className="text-danger"> {errors.publication}</p>
+                    </Form.Group>
+                    <Form.Group>
+                        <select className="w-100  p-2 select-category"  onChange={ (e) => setCategoryId(e.target.value)}>
+                            <option disabled value='DEFAULT'>Select your gender</option>
+                            {!isLoading && listCategory ? listCategory.map( category => 
                                 <option value={category.id} key={category.id} >{category.name}</option>
                             ) : null}
                         </select>
-                </div>
-                <div className="form-group">
-                    <input type="number" name="pages" className="form-control bg-light" placeholder="Pages" onChange={ (e) => handleChange(e)}/>
-                </div>
-                <div className="form-group">
-                    <input type="text" name="ISBN" autoComplete="off" className="form-control bg-light" placeholder="ISBN" onChange={ (e) => handleChange(e)}/>
-                </div>
-                <div className="form-group">
-                    <textarea placeholder='description a book' name='description' className="form-control bg-light" rows="5" onChange={ (e) => handleChange(e)}></textarea>
-                </div>
-                <div className="form-group">
-                    <button type="button" className="upload-btn" onClick={openModal} >
-                      <span> Attach Book File</span><CgAttachment/>       
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Control type="text" 
+                                name="pages"  
+                                value={values.pages}
+                                onChange={handleChange} 
+                                onBlur={handleBlur}
+                                isValid={touched.pages && !errors.pages}
+                                isInvalid={!!errors.pages}
+                                placeholder="Pages"/>
+                                <p className="text-danger"> {errors.pages}</p>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Control type="text" 
+                               name="ISBN"   
+                               value={values.ISBN}
+                               onChange={handleChange} 
+                               onBlur={handleBlur}
+                               isValid={touched.ISBN && !errors.ISBN}
+                               isInvalid={!!errors.ISBN}
+                               placeholder="ISBN"/>
+                               <p className="text-danger"> {errors.ISBN}</p>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Control as="textarea" 
+                                rows={4}                    placeholder='Description' 
+                                name='description' 
+                                value={values.description}
+                                onChange={handleChange} 
+                                onBlur={handleBlur}
+                                isValid={touched.description && !errors.description}
+                                isInvalid={!!errors.description}
+                                placeholder="description"/>
+                                <p className="text-danger"> {errors.description}</p>
+                    </Form.Group>
+                    <Form.Group>
+                        <button type="button" className="upload-btn" onClick={openModal}>
+                            <span> Attach Literature Cover</span><CgAttachment/>      
+                        </button>
+                        <Fileuploader isAddLiterature={true} types={['.png','.jpg','.jpeg']} show={show} closeModal={() => setShow(false)} getUrls = {getUrls}/>
+                    </Form.Group>
+                    <Form.Group>
+                        <button type="button" className="upload-btn" onClick={ () => setVisible(true)}>
+                            <span> Attach File</span><CgAttachment/>      
+                        </button>
+                        <EpubUploader visible={visible} onClose={() => setVisible(false)} getEpubUrl={getEpubUrl}/>
+                    </Form.Group>
+                <div className="add-book__page-btn">
+                    <button className='add-book-btn' type="submit" disabled={file =='' || cover ==''} >
+                        <span>Add Literature</span><BiBookAdd/>
                     </button>
-                    <Fileuploader show={show}  closeModal={closeModal} getUrls = {getUrls}/>
+                    <Message show={showMessage} hide = {closeModal}  />
                 </div>
-            </form>
-            <div className="add-book__page-btn">
-                <button class='add-book-btn' onClick={(e) => onSaved(e)} disabled={urlFiles == 0}>
-                    <span>Add Book</span><BiBookAdd/>
-                </button>
-                <Message show={showMessage} hide ={closeMessage} data={message}/>
-            </div>
+            </Form>)}
+            </Formik>
         </div>
     )
 }

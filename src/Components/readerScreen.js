@@ -1,16 +1,18 @@
 import React,{useContext,useEffect} from "react";
 import Loader from './Loader';
 import {ReactReader} from "react-reader";
-import Axios from 'axios';
 import {DETAIL_PRODUCT_REQUEST,DETAIL_PRODUCT_SUCCESS,DETAIL_PRODUCT_FAIL} from './Provider/constants/Constant';
 import {ProductContext} from './Provider/productProvider';
 import {useAuth} from './Provider/authProvider';
+import {API} from '../http';
+
 function BookViewer(props){
   const [state,dispatch] = useContext(ProductContext);
   const {isLoading,error,detailProduct}  = state;
   const {id} = props.match.params;
   const {state:authData} = useAuth();
   const {userInfo} = authData;
+  
 
   useEffect(() => {
     const listDetailProduct = async () =>{
@@ -18,9 +20,9 @@ function BookViewer(props){
                 type:DETAIL_PRODUCT_REQUEST
             })
         try{
-            const {data:{data}} = await Axios.get(`/api/v1/book/${id}`,{
+            const {data:{data}} = await API.get(`/book/${id}`,{
                 headers:{
-                    Authorization:`${userInfo.token}`
+                    Authorization:`Bearer ${userInfo.token}`
                 }
             })
                 dispatch({
@@ -40,7 +42,7 @@ function BookViewer(props){
 }, [])
     return (
       <>
-          <div style={{ position: "relative", height: "100vh"}}>
+          <div className={userInfo.isAdmin && 'mx_7'} style={{ position: "relative", height: "100vh"}}>
           {" "}
 
           {isLoading ? <Loader/> : error ? <div>{error}</div> : detailProduct ? 

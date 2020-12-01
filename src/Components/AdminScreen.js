@@ -5,7 +5,8 @@ import {useAuth} from './Provider/authProvider';
 import {AdminProductContext} from './Provider/AdminDataProvider';
 import {Link} from 'react-router-dom';
 import Loader from './Loader';
-import Axios from 'axios';
+import {API} from '../http';
+
 import {LIST_PRODUCTS_USER_REQUEST,LIST_PRODUCTS_USER_SUCCESS,LIST_PRODUCTS_USER_FAIL, 
        UPDATE_PRODUCT_USER_REQUEST,UPDATE_PRODUCT_USER_SUCCESS,UPDATE_PRODUCT_USER_FAIL,DELETE_PRODUCT_USER_REQUEST,DELETE_PRODUCT_USER_SUCCESS,DELETE_PRODUCT_USER_FAIL } from './Provider/constants/Constant';
 
@@ -22,9 +23,9 @@ export default function Admin() {
             type:LIST_PRODUCTS_USER_REQUEST
         })
     try{
-        const {data:{data}} = await Axios.get(`/api/v1/list_transaction`,{
+        const {data:{data}} = await API.get(`/list_transaction`,{
             headers:{
-                Authorization:`${userInfo.token}`
+                Authorization:`Bearer ${userInfo.token}`
             }
         })
         dispatch({
@@ -48,9 +49,9 @@ export default function Admin() {
                 type:UPDATE_PRODUCT_USER_REQUEST
             })
         try{    
-        const {data:{message}} = await Axios.patch(`/api/v1/list-books/${id}`,updateData,{
+        const {data:{message}} = await API.patch(`/list-books/${id}`,updateData,{
             headers:{
-                Authorization:`${userInfo.token}`
+                Authorization:`Bearer ${userInfo.token}`
             }
         })
             dispatch({
@@ -75,9 +76,9 @@ export default function Admin() {
                 type:DELETE_PRODUCT_USER_REQUEST
             })
         try{    
-        const {data:{message}} = await Axios.delete(`/api/v1/book/${id}`,{
+        const {data:{message}} = await API.delete(`/book/${id}`,{
             headers:{
-                Authorization:`${userInfo.token}`
+                Authorization:`Bearer ${userInfo.token}`
             }
         })
             dispatch({
@@ -109,18 +110,18 @@ export default function Admin() {
                 <table class="table table-striped text-dark">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>User Or Author</th>
-                            <th>ISBN</th>
-                            <th>E-Book</th>
-                            <th>Status Payment</th>
-                            <th>Action</th>
+                            <th style={{width:'5%'}}>No</th>
+                            <th style={{width:'15%'}}>User Or Author</th>
+                            <th style={{width:'10%'}}>ISBN</th>
+                            <th style={{width:'30%'}}>E-Book</th>
+                            <th style={{width:'15%'}}>Status Payment</th>
+                            <th style={{width:'20%'}}>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    { loading ? <Loader/> : error ? <p>{error}</p> : Products ? Products.map( product => (
-                        <tr key={product.id}>
-                            <th scope="row">{product.id}</th>
+                    { loading ? <Loader/> : error ? <p>{error}</p> : Products ? Products.map( (product,index) => (
+                        <tr key={index+1}>
+                            <th scope="row">{index+1}</th>
                             <td>{product.userId.fullname}</td>
                             <td>{product.ISBN}</td>
                             <Link to={`/detail/${product.id}`}><td>{product.file}</td></Link>
@@ -131,7 +132,7 @@ export default function Admin() {
                             <td>{product.status === 'approved' ? <FaCheckCircle/>:
                                  product.status === 'cancelled' ? <button className="btn btn-info" onClick={ () => onDeleted(product.id) }>Delete</button>:
                                  product.status !== "approved" ||  product.status !== "cancelled" || product.status == "waiting to be verificated" ? 
-                                <div>
+                                <div style={{float:'right'}}>
                                     <button className="btn btn-danger"  onClick={ () => onUpdated(product.id,'cancelled')}>cancelled</button>{" "}
                                     <button className="btn btn-success" onClick={ () => onUpdated(product.id,'approved')}>verificated</button>
                                 </div>

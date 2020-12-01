@@ -3,20 +3,19 @@ import {Link} from 'react-router-dom';
 import Loader from './Loader';
 import {ProductContext} from './Provider/productProvider';
 import {useAuth} from './Provider/authProvider';
-import Axios from 'axios';
+import {API} from '../http';
 
 import {Dropdown,ButtonGroup,DropdownButton} from 'react-bootstrap';
 import {LIST_PRODUCTS_REQUEST,LIST_PRODUCTS_SUCCESS,LIST_PRODUCTS_FAIL,LIST_CATEGORY_REQUEST,LIST_CATEGORY_SUCCESS,LIST_CATEGORY_FAIL, GET_PRODUCTS_BY_CATEGORY_REQUEST, GET_PRODUCTS_BY_CATEGORY_SUCCESS, GET_PRODUCTS_BY_CATEGORY_FAIL} from './Provider/constants/Constant';
 
 
-function BookListScreen(props) {
+function HomeScreen(props) {
         const [state,dispatch] = useContext(ProductContext);
         const {state:authState} = useAuth();
         const {userInfo} = authState;
         const [books,setBooks] = useState([]);
         const [listOfCategory,setListOfCategory] = useState([]);
         const {isLoading,error,products,listCategory,categories} = state;
-        console.log('isi state',state)
         
         let handleSelect = (key) =>{
             if(key == 0){
@@ -26,9 +25,6 @@ function BookListScreen(props) {
             }
         }
 
-        const params = {
-            status:'approved'
-        }
 
         const listProducts = async () =>{
             dispatch({
@@ -36,12 +32,15 @@ function BookListScreen(props) {
             })
         try{
 
-            const {data:{data}} = await Axios.get('/api/v1/list-books',{
-                params:params,
+            const {data:{data}} = await API.get('/books',{
+                params:{
+                    status:'approved'
+                },
                 headers:{
-                    Authorization:`${userInfo.token}` 
+                    Authorization:`Bearer ${userInfo.token}` 
                 }
             })
+            console.log('isi data',data)
           
             dispatch({
                     type:LIST_PRODUCTS_SUCCESS,
@@ -63,9 +62,9 @@ function BookListScreen(props) {
                 type:GET_PRODUCTS_BY_CATEGORY_REQUEST
             })
         try{
-            const {data:{data}} = await Axios.get(`/api/v1/list-books?categoryId=${categoryId}`,{
+            const {data:{data}} = await API.get(`/books?categoryId=${categoryId}`,{
                 headers:{
-                    Authorization:`${userInfo.token}`
+                    Authorization:`Bearer ${userInfo.token}`
                 }
             })
             dispatch({
@@ -76,12 +75,10 @@ function BookListScreen(props) {
         }catch(error){
             dispatch({
                 type:GET_PRODUCTS_BY_CATEGORY_FAIL,
-                payload:error
+                payload:error.message
             })
             }
         }
-
-        const bookList = books.filter( (book,index,self) => index === self.findIndex( (t) => (t.file === book.file && t.publication === book.publication)))
 
         useEffect( () => {
             const getListCategory= async () =>{
@@ -89,9 +86,9 @@ function BookListScreen(props) {
                     type:LIST_CATEGORY_REQUEST
                 })
             try{
-                const {data:{data}} = await Axios.get(`/api/v1/category`,{
+                const {data:{data}} = await API.get(`/category`,{
                     headers:{
-                        Authorization:`${userInfo.token}`
+                        Authorization:`Bearer ${userInfo.token}`
                     }
                 })
             
@@ -104,7 +101,7 @@ function BookListScreen(props) {
             }catch(error){
                 dispatch({
                     type:LIST_CATEGORY_FAIL,
-                    payload:error
+                    payload:error.message
                 })
                 }
             }
@@ -112,7 +109,6 @@ function BookListScreen(props) {
             getListCategory();
         }, [])
 
-        console.log('data',books)
         return (
             <>
                 <div className='pages__cover'>
@@ -142,9 +138,9 @@ function BookListScreen(props) {
                     </DropdownButton>
                  </div>
               
-                <div className={bookList && bookList.length > 3 ? 'pages-books':  'pages-books justify-content-start'}>
+                <div className={books && books.length > 3 ? 'pages-books':  'pages-books justify-content-start'}>
                 { isLoading ? <Loader/> : error ? <div>{error}</div> :
-                    bookList.length > 0 ? bookList.map( book => (
+                    books.length > 0 ? books.map( book => (
                         <div className="card" key={book.id}>
                         <Link to={`/detail/${book.id}`}>
                             <img src={book.cover} className="card-img-top" alt="book"/>
@@ -160,4 +156,4 @@ function BookListScreen(props) {
         )
     }
 
-export default BookListScreen;
+export default HomeScreen;
